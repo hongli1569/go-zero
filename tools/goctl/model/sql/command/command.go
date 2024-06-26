@@ -51,6 +51,8 @@ var (
 	VarBoolStrict bool
 	// VarStringSliceIgnoreColumns represents the columns which are ignored.
 	VarStringSliceIgnoreColumns []string
+	// VarStringSliceFilterColumns represents the columns which are queryable.
+	VarStringSliceFilterColumns []string
 )
 
 var errNotMatched = errors.New("sql not matched")
@@ -90,6 +92,7 @@ func MysqlDDL(_ *cobra.Command, _ []string) error {
 		database:      database,
 		strict:        VarBoolStrict,
 		ignoreColumns: mergeColumns(VarStringSliceIgnoreColumns),
+		filterColumns: mergeColumns(VarStringSliceFilterColumns),
 	}
 	return fromDDL(arg)
 }
@@ -131,6 +134,7 @@ func MySqlDataSource(_ *cobra.Command, _ []string) error {
 		idea:          idea,
 		strict:        VarBoolStrict,
 		ignoreColumns: mergeColumns(VarStringSliceIgnoreColumns),
+		filterColumns: mergeColumns(VarStringSliceFilterColumns),
 	}
 	return fromMysqlDataSource(arg)
 }
@@ -226,6 +230,7 @@ type ddlArg struct {
 	database      string
 	strict        bool
 	ignoreColumns []string
+	filterColumns []string
 }
 
 func fromDDL(arg ddlArg) error {
@@ -245,7 +250,7 @@ func fromDDL(arg ddlArg) error {
 	}
 
 	generator, err := gen.NewDefaultGenerator(arg.dir, arg.cfg,
-		gen.WithConsoleOption(log), gen.WithIgnoreColumns(arg.ignoreColumns))
+		gen.WithConsoleOption(log), gen.WithIgnoreColumns(arg.ignoreColumns), gen.WithFilterColumns(arg.filterColumns))
 	if err != nil {
 		return err
 	}
@@ -267,6 +272,7 @@ type dataSourceArg struct {
 	cache, idea   bool
 	strict        bool
 	ignoreColumns []string
+	filterColumns []string
 }
 
 func fromMysqlDataSource(arg dataSourceArg) error {
@@ -320,7 +326,7 @@ func fromMysqlDataSource(arg dataSourceArg) error {
 	}
 
 	generator, err := gen.NewDefaultGenerator(arg.dir, arg.cfg,
-		gen.WithConsoleOption(log), gen.WithIgnoreColumns(arg.ignoreColumns))
+		gen.WithConsoleOption(log), gen.WithIgnoreColumns(arg.ignoreColumns), gen.WithFilterColumns(arg.filterColumns))
 	if err != nil {
 		return err
 	}

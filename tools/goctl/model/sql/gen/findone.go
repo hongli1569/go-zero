@@ -27,6 +27,9 @@ func genFindOne(table Table, withCache, postgreSql bool) (string, string, error)
 			"cacheKeyVariable":          table.PrimaryCacheKey.KeyLeft,
 			"postgreSql":                postgreSql,
 			"data":                      table,
+			"originalFields":            table.Fields,
+			"filterFields":              table.filterColumns,
+			"aggregate":                 genAggregate(),
 		})
 	if err != nil {
 		return "", "", err

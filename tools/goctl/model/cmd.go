@@ -71,7 +71,8 @@ func init() {
 	mysqlCmd.PersistentFlags().BoolVar(&command.VarBoolStrict, "strict")
 	mysqlCmd.PersistentFlags().StringSliceVarPWithDefaultValue(&command.VarStringSliceIgnoreColumns,
 		"ignore-columns", "i", []string{"create_at", "created_at", "create_time", "update_at", "updated_at", "update_time"})
-
+	mysqlCmd.PersistentFlags().StringSliceVarPWithDefaultValue(&command.VarStringSliceFilterColumns,
+		"filter-columns", "f", []string{})
 	mysqlCmd.AddCommand(datasourceCmd, ddlCmd)
 	pgCmd.AddCommand(pgDatasourceCmd)
 	Cmd.AddCommand(mysqlCmd, mongoCmd, pgCmd)
