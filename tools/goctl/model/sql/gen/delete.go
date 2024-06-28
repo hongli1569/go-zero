@@ -35,6 +35,7 @@ func genDelete(table Table, withCache, postgreSql bool) (string, string, error) 
 		Parse(text).
 		Execute(map[string]any{
 			"upperStartCamelObject":     camel,
+			"lowerStartCamelObject":     stringx.From(camel).Untitle(),
 			"withCache":                 withCache,
 			"containsIndexCache":        table.ContainsUniqueCacheKey,
 			"lowerStartCamelPrimaryKey": util.EscapeGolangKeyword(stringx.From(table.PrimaryKey.Name.ToCamel()).Untitle()),
@@ -58,6 +59,8 @@ func genDelete(table Table, withCache, postgreSql bool) (string, string, error) 
 	deleteMethodOut, err := util.With("deleteMethod").
 		Parse(text).
 		Execute(map[string]any{
+			"upperStartCamelObject":     camel,
+			"lowerStartCamelObject":     stringx.From(camel).Untitle(),
 			"lowerStartCamelPrimaryKey": util.EscapeGolangKeyword(stringx.From(table.PrimaryKey.Name.ToCamel()).Untitle()),
 			"dataType":                  table.PrimaryKey.DataType,
 			"data":                      table,
